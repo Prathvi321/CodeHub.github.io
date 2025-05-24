@@ -148,3 +148,8 @@ document.addEventListener('DOMContentLoaded', function() {
     codeBlock.innerHTML = code;
   }
 });
+const floatingCircle = document.querySelector('.floating-circle');
+if (floatingCircle) {
+  floatingCircle.style.position = 'fixed';
+  floatingCircle.style.zIndex = '9999';
+}

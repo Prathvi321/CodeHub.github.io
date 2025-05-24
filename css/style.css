@@ -129,13 +129,25 @@ a:hover {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Header Styles */
@@ -242,7 +254,7 @@ header {
   overflow: hidden;
   padding: 6rem 0 3rem;
   background: radial-gradient(circle at 60% 30%, #3730a3 0%, transparent 70%),
-              radial-gradient(circle at 30% 70%, #0f766e 0%, transparent 70%);
+    radial-gradient(circle at 30% 70%, #0f766e 0%, transparent 70%);
 }
 
 .hero::before {
@@ -524,7 +536,7 @@ header {
   height: 200%;
   top: -50%;
   left: -50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
   transform: rotate(45deg);
 }
 
@@ -813,9 +825,12 @@ footer {
 
 /* Animations */
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-20px);
   }
@@ -825,6 +840,7 @@ footer {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -835,6 +851,7 @@ footer {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -846,6 +863,7 @@ footer {
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -857,6 +875,7 @@ footer {
     opacity: 0;
     transform: translateX(30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -902,7 +921,7 @@ footer {
   .about-content {
     grid-template-columns: 1fr;
   }
-  
+
   .about-image {
     max-width: 500px;
     margin: 0 auto 3rem;
@@ -913,30 +932,30 @@ footer {
   .navbar {
     flex-direction: column;
   }
-  
+
   .nav-links {
     margin-top: 1rem;
     justify-content: center;
   }
-  
+
   .hero {
     padding-top: 8rem;
   }
-  
+
   .hero-buttons {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .hero-buttons .btn {
     width: 100%;
     max-width: 300px;
   }
-  
+
   .language-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .footer-content {
     flex-direction: column;
   }
@@ -946,16 +965,43 @@ footer {
   .nav-links {
     gap: 1rem;
   }
-  
+
   .hero h1 {
     font-size: 2.5rem;
   }
-  
+
   .hero p {
     font-size: 1rem;
   }
-  
+
   .section-title {
     font-size: 2rem;
   }
+}
+
+.floating-circle {
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.floating-circle img {
+  border-radius: 50%;
+}
+
+.floating-circle a {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
