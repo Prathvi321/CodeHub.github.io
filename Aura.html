@@ -61,6 +61,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
+        require('dotenv').config();
         // Main App component for the AI Programming Chatbot
         function App() {
             // State to store all chat messages (user and AI)
@@ -138,7 +139,7 @@
 
                     // IMPORTANT: Replace "YOUR_GEMINI_API_KEY" with your actual Gemini API Key.
                     // You can get one from Google AI Studio: https://aistudio.google.com/app/apikey
-                    const apiKey = "AIzaSyC7RhRo6crgugnFSiDQUD6-y0Xclp_YhDs"; // <-- REPLACE THIS WITH YOUR API KEY
+                    const apiKey = process.env.GEMINI_API_KEY;// <-- REPLACE THIS WITH YOUR API KEY
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                     const response = await fetch(apiUrl, {
