@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeHub | Aura AI Programming Tutor - Integrated</title>
-
+    <title>Aura - AI Tutor</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0;
             font-family: 'Inter', sans-serif;
-            overflow: hidden; /* Prevent body scroll if the app takes full screen */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent body scroll, let content scroll */
         }
+        /* Custom scrollbar for chat area */
         .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
         }
@@ -23,282 +22,366 @@
             border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #a0aec0; /* Tailwind gray-400 */
+            background: #888;
             border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #718096; /* Tailwind gray-500 */
-        }
-
-        @keyframes bounce-slow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        .animate-bounce-slow {
-            animation: bounce-slow 1.5s infinite;
-        }
-
-        /* Basic styling for code blocks within chat messages */
-        pre {
-            background-color: #e2e8f0; /* Tailwind gray-200 */
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace; /* A good monospace font */
-            font-size: 0.9em;
-            margin-top: 0.5rem;
-        }
-        code {
-            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            background: #555;
         }
     </style>
 </head>
-<body>
-    <div id="root" class="h-screen"></div>
+<body class="h-screen flex items-center justify-center bg-gray-100">
+    <div id="root" class="w-full h-full">
+        <div class="flex items-center justify-center h-full bg-gray-100">
+            <div class="text-center text-gray-600 text-lg">
+                Loading Aura...
+            </div>
+        </div>
+    </div>
 
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <script type="text/babel">
-        // Main App component for the AI Programming Chatbot
-        function App() {
-            // State to store all chat messages (user and AI)
-            const [messages, setMessages] = React.useState([]);
-            // State for the current message being typed by the user
-            const [currentMessage, setCurrentMessage] = React.useState('');
-            // State to store the programming language context
-            const [programmingLanguage, setProgrammingLanguage] = React.useState('General'); // Default language
-            // State to manage loading indicator during API calls
-            const [isLoading, setIsLoading] = React.useState(false);
-            // Ref to scroll to the bottom of the chat history
-            const messagesEndRef = React.useRef(null);
+    <script type="module">
+        // No Firebase imports needed as chat history persistence is removed
 
-            // Define a list of programming languages for the dropdown
-            const programmingLanguages = [
-                'General', 'Python', 'JavaScript', 'Java', 'C++', 'C#', 'Ruby', 'Go', 'Swift', 'PHP', 'TypeScript', 'Kotlin', 'Rust', 'HTML/CSS', 'SQL', 'Bash', 'R', 'Perl', 'Scala'
-            ];
+        /**
+         * MessageBox Component
+         * Displays a custom message box instead of browser's alert/confirm.
+         * @param {object} props - Component props.
+         * @param {string} props.message - The message to display.
+         * @param {function} props.onClose - Callback function when the message box is closed.
+         */
+        const MessageBox = ({ message, onClose }) => {
+            const e = React.createElement;
+            return e('div', { className: 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50' },
+                e('div', { className: 'bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center' },
+                    e('p', { className: 'text-lg font-semibold mb-4' }, message),
+                    e('button', {
+                        onClick: onClose,
+                        className: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
+                    }, 'OK')
+                )
+            );
+        };
 
-            // Effect to scroll to the latest message whenever messages state changes
-            React.useEffect(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            }, [messages]);
+        /**
+         * highlightCode Helper Function
+         * Applies basic syntax highlighting to a code string.
+         * @param {string} code - The code string to highlight.
+         * @returns {Array<React.ReactNode>} An array of React elements with syntax highlighting.
+         */
+        const highlightCode = (code) => {
+            const e = React.createElement;
+            const highlightedParts = [];
+            let lastIndex = 0;
 
-            /**
-             * Formats raw text from the AI into HTML, specifically handling markdown code blocks.
-             * This is a basic implementation and might need a more robust markdown parser
-             * for complex markdown.
-             */
-            const formatTextForDisplay = (text) => {
-                // Basic markdown code block detection
-                // Replaces ```language\ncode\n``` with <pre><code>code</code></pre>
-                const codeBlockRegex = /```(\w+)?\n([\s\S]*?)\n```/g;
-                let htmlText = text.replace(codeBlockRegex, (match, lang, code) => {
-                    // Sanitize code content to prevent XSS if you were accepting user code
-                    // For AI generated code, it's generally safer, but good practice to consider.
-                    const escapedCode = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    return `<pre><code class="language-${lang || ''}">${escapedCode}</code></pre>`;
-                });
+            // Regex to find keywords, functions, comments, strings, and numbers
+            const regex = /(function\s+\w+|const\s+\w+\s*=\s*\([^)]*\)\s*=>|let\s+\w+\s*=\s*\([^)]*\)\s*=>|var\s+\w+\s*=\s*\([^)]*\)\s*=>|(\w+)\s*\([^)]*\)|new\s+\w+|this|if|else|for|while|return|class|import|export|true|false|null|undefined|\/\/.*|\/\*[\s\S]*?\*\/|(["'`])(?:(?!\1)[^\\]|\\.)*\1|\b\d+(\.\d+)?\b)/g;
 
-                // Basic bold text
-                htmlText = htmlText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                // Basic italic text
-                htmlText = htmlText.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                // Basic newlines to <br> for general text outside pre tags
-                htmlText = htmlText.replace(/(?<!<pre>.*?)\n(?!.*?<\/pre>)/g, '<br />');
+            let match;
+            while ((match = regex.exec(code)) !== null) {
+                // Add plain text before the match
+                if (match.index > lastIndex) {
+                    highlightedParts.push(e('span', { key: `plain-${lastIndex}`, className: 'text-gray-200' }, code.substring(lastIndex, match.index)));
+                }
 
+                const matchedText = match[0];
+                let className = 'text-gray-200'; // Default color
 
-                return htmlText;
+                // Determine the class based on the matched content
+                if (matchedText.startsWith('//') || matchedText.startsWith('/*')) {
+                    className = 'text-gray-500'; // Comments
+                } else if (matchedText.startsWith('"') || matchedText.startsWith("'") || matchedText.startsWith("`")) {
+                    className = 'text-orange-300'; // Strings
+                } else if (!isNaN(matchedText)) {
+                    className = 'text-yellow-300'; // Numbers
+                } else if (/\b(function|const|let|var)\s+\w+/.test(matchedText) || /\w+\s*\([^)]*\)/.test(matchedText)) {
+                    className = 'text-blue-400'; // Functions/Method calls
+                } else if (/\b(if|else|for|while|return|class|import|export|new|this|true|false|null|undefined)\b/.test(matchedText)) {
+                    className = 'text-purple-400'; // Keywords
+                }
+
+                highlightedParts.push(e('span', { key: `highlight-${match.index}`, className: className }, matchedText));
+                lastIndex = regex.lastIndex;
+            }
+
+            // Add any remaining plain text after the last match
+            if (lastIndex < code.length) {
+                highlightedParts.push(e('span', { key: `plain-end-${lastIndex}`, className: 'text-gray-200' }, code.substring(lastIndex)));
+            }
+
+            return highlightedParts;
+        };
+
+        /**
+         * renderMessageContent Helper Function
+         * Renders text content, parsing basic Markdown for code blocks, bold, italics, and lists.
+         * @param {string} text - The raw text content to parse.
+         * @returns {Array<React.ReactNode>} An array of React elements representing the parsed content.
+         */
+        const renderMessageContent = (text) => {
+            const e = React.createElement;
+            const parts = [];
+            let currentText = text;
+
+            // Regex for code blocks (```...```)
+            const codeBlockRegex = /(```[\s\S]*?```)/g;
+            let match;
+            let lastIndex = 0;
+
+            while ((match = codeBlockRegex.exec(currentText)) !== null) {
+                // Add text before the code block
+                if (match.index > lastIndex) {
+                    parts.push(currentText.substring(lastIndex, match.index));
+                }
+                // Add the code block
+                parts.push(match[0]);
+                lastIndex = codeBlockRegex.lastIndex;
+            }
+            // Add any remaining text after the last code block
+            if (lastIndex < currentText.length) {
+                parts.push(currentText.substring(lastIndex));
+            }
+
+            return parts.map((part, partIndex) => {
+                if (part.startsWith('```') && part.endsWith('```')) {
+                    // Code block - apply syntax highlighting
+                    const codeContent = part.substring(3, part.length - 3).trim();
+                    return e('pre', { key: partIndex, className: 'bg-gray-800 text-green-400 p-4 rounded-lg overflow-x-auto my-2 font-mono text-sm' },
+                        e('code', null, highlightCode(codeContent)) // Use highlightCode here
+                    );
+                } else {
+                    // Process regular text for other Markdown elements
+                    const lines = part.split('\n');
+                    return lines.map((line, lineIndex) => {
+                        // Handle lists
+                        if (line.match(/^(\s*[-*]\s+)/)) { // Unordered list
+                            const listItemContent = line.replace(/^(\s*[-*]\s+)/, '');
+                            return e('li', { key: `${partIndex}-${lineIndex}`, className: 'ml-4 list-disc text-gray-800' },
+                                renderInlineMarkdown(listItemContent)
+                            );
+                        } else if (line.match(/^(\s*\d+\.\s+)/)) { // Ordered list
+                            const listItemContent = line.replace(/^(\s*\d+\.\s+)/, '');
+                            return e('li', { key: `${partIndex}-${lineIndex}`, className: 'ml-4 list-decimal text-gray-800' },
+                                renderInlineMarkdown(listItemContent)
+                            );
+                        } else {
+                            // Render inline markdown for the line
+                            return e('p', { key: `${partIndex}-${lineIndex}`, className: 'mb-1 text-gray-800' },
+                                renderInlineMarkdown(line)
+                            );
+                        }
+                    });
+                }
+            });
+        };
+
+        /**
+         * renderInlineMarkdown Helper Function
+         * Renders inline Markdown elements like bold, italic, and inline code.
+         * @param {string} text - The raw text content to parse for inline markdown.
+         * @returns {Array<React.ReactNode>} An array of React elements representing the parsed inline content.
+         */
+        const renderInlineMarkdown = (text) => {
+            const e = React.createElement;
+            // Regex to find inline code (`...`), bold (**...** or __...__), and italic (*...* or _..._)
+            const inlineParts = text.split(/(`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^**]+\*|_[^_]+_)/g);
+
+            return inlineParts.map((inlinePart, inlineIndex) => {
+                if (inlinePart.startsWith('`') && inlinePart.endsWith('`')) {
+                    return e('code', { key: inlineIndex, className: 'bg-gray-700 text-yellow-300 px-1 py-0.5 rounded font-mono text-sm' },
+                        inlinePart.substring(1, inlinePart.length - 1)
+                    );
+                } else if (inlinePart.startsWith('**') && inlinePart.endsWith('**')) {
+                    return e('strong', { key: inlineIndex, className: 'font-bold' },
+                        inlinePart.substring(2, inlinePart.length - 2)
+                    );
+                } else if (inlinePart.startsWith('__') && inlinePart.endsWith('__')) {
+                    return e('strong', { key: inlineIndex, className: 'font-bold' },
+                        inlinePart.substring(2, inlinePart.length - 2)
+                    );
+                } else if (inlinePart.startsWith('*') && inlinePart.endsWith('*')) {
+                    return e('em', { key: inlineIndex, className: 'italic' },
+                        inlinePart.substring(1, inlinePart.length - 1)
+                    );
+                } else if (inlinePart.startsWith('_') && inlinePart.endsWith('_')) {
+                    return e('em', { key: inlineIndex, className: 'italic' },
+                        inlinePart.substring(1, inlinePart.length - 1)
+                    );
+                } else {
+                    return e('span', { key: inlineIndex }, inlinePart);
+                }
+            });
+        };
+
+        /**
+         * Aura Component
+         * Provides an interactive AI-powered chat tutor without chat history persistence.
+         * It uses the Gemini 2.0 Flash model for generating AI responses.
+         */
+        const Aura = () => { // Renamed from AITutor to Aura
+            const { useState, useEffect, useRef } = React;
+            const [inputMessage, setInputMessage] = useState('');
+            const [chatHistory, setChatHistory] = useState([]); // Chat history for current session only
+            const [isLoading, setIsLoading] = useState(false);
+            const messagesEndRef = useRef(null);
+
+            // State for displaying custom message box
+            const [messageBox, setMessageBox] = useState(null);
+            const showMessageBox = (message) => {
+                setMessageBox({ message, onClose: () => setMessageBox(null) });
             };
 
+            // Scroll to the bottom of the chat window whenever messages update or loading state changes
+            useEffect(() => {
+                scrollToBottom();
+            }, [chatHistory, isLoading]);
 
-            /**
-             * Handles sending a message to the AI.
-             * It adds the user's message to the chat, constructs a prompt for the AI,
-             * calls the Gemini API, and then adds the AI's response to the chat.
-             */
+            const scrollToBottom = () => {
+                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+            };
+
+            // Handles sending a message to the AI tutor
             const handleSendMessage = async () => {
-                if (!currentMessage.trim()) return; // Don't send empty messages
+                if (inputMessage.trim() === '') return;
 
-                const userMessage = currentMessage.trim();
-                // Add user's message to the chat history
-                setMessages(prevMessages => [...prevMessages, { type: 'user', text: userMessage }]);
-                setCurrentMessage(''); // Clear the input field
+                const userMessage = {
+                    text: inputMessage,
+                    role: 'user',
+                    timestamp: new Date().toISOString(), // Use local timestamp for display
+                };
 
-                setIsLoading(true); // Show loading indicator
+                // Add user message to local chat history
+                setChatHistory(prev => [...prev, userMessage]);
+                setInputMessage('');
+                setIsLoading(true);
 
                 try {
-                    // Construct the prompt for the AI, including the programming language context
-                    // Added instruction for Aura to format code nicely if applicable.
-                    const prompt = `You are an AI programming tutor named Aura. The user is asking a question about ${programmingLanguage}. Please explain the following concept/answer the following question in the context of ${programmingLanguage}. If providing code, format it nicely using markdown code blocks: ${userMessage}`;
+                    // Prepare the chat history for the LLM (Large Language Model) API call
+                    // The LLM needs the conversation context to generate relevant responses
+                    const llmChatHistory = [...chatHistory, userMessage].map(msg => ({ // Use updated history for LLM
+                        role: msg.role,
+                        parts: [{ text: msg.text }]
+                    }));
 
-                    let chatHistory = [];
-                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                    const payload = { contents: chatHistory };
+                    const payload = {
+                        contents: llmChatHistory,
+                    };
 
-                    // IMPORTANT: Replace "YOUR_GEMINI_API_KEY" with your actual Gemini API Key.
-                    // You can get one from Google AI Studio: https://aistudio.google.com/app/apikey
-                    const apiKey = "AIzaSyC7RhRo6crgugnFSiDQUD6-y0Xclp_YhDs" // <-- REPLACE THIS WITH YOUR API KEY
+                    const apiKey = "AIzaSyC7RhRo6crgugnFSiDQUD6-y0Xclp_YhDs"; // API key is automatically provided by Canvas at runtime
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
+                    // Make the API call to the Gemini model
                     const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
 
-                    const result = await response.json();
+                    const result = await response.json(); // Parse the JSON response
 
-                    let aiResponseText = "Sorry, I couldn't get a response from Aura. Please try again.";
-
-                    // Check if the response structure is as expected
+                    // Check if the AI response is valid and contains content
                     if (result.candidates && result.candidates.length > 0 &&
                         result.candidates[0].content && result.candidates[0].content.parts &&
                         result.candidates[0].content.parts.length > 0) {
-                        aiResponseText = result.candidates[0].content.parts[0].text;
+                        const aiResponseText = result.candidates[0].content.parts[0].text;
+                        const aiMessage = {
+                            text: aiResponseText,
+                            role: 'model',
+                            timestamp: new Date().toISOString(), // Use local timestamp for display
+                        };
+                        // Add the AI's response to local chat history
+                        setChatHistory(prev => [...prev, aiMessage]);
                     } else {
+                        // Handle cases where the API response structure is unexpected
                         console.error("Unexpected API response structure:", result);
+                        showMessageBox("Sorry, I couldn't get a response from Aura. Please try again.");
                     }
-
-                    // Add AI's response to the chat history
-                    setMessages(prevMessages => [...prevMessages, { type: 'ai', text: aiResponseText }]);
-
                 } catch (error) {
-                    console.error("Error calling Gemini API:", error);
-                    // Add an error message to the chat
-                    setMessages(prevMessages => [...prevMessages, { type: 'ai', text: "Oops! Something went wrong. Please try again later." }]);
+                    // Catch and handle any errors during the process (network, API)
+                    console.error("Error sending message or getting AI response:", error);
+                    showMessageBox("There was an error communicating with Aura. Please check your network connection and try again.");
                 } finally {
-                    setIsLoading(false); // Hide loading indicator
+                    setIsLoading(false); // Reset loading state
                 }
             };
 
-            /**
-             * Handles clearing all messages from the chat history.
-             */
-            const handleClearChat = () => {
-                setMessages([]);
+            // Handles key presses in the input textarea (e.g., sending on Enter)
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) { // Send message on Enter, but allow Shift+Enter for new line
+                    e.preventDefault(); // Prevent default Enter behavior (new line)
+                    handleSendMessage();
+                }
             };
 
-            return (
-                <div className="flex flex-col h-full bg-gray-50 font-inter antialiased">
-                    {/* Header */}
-                    <header className="bg-gradient-to-r from-blue-700 to-purple-800 text-white p-4 shadow-xl rounded-b-3xl">
-                        <div className="flex items-center justify-center space-x-3">
-                            {/* Aura Icon (simple SVG) */}
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1m-1.636 6.364l-.707-.707M12 21v-1m-6.364-1.636l-.707.707M3 12H4m1.636-6.364l.707-.707M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            <h1 className="text-3xl md:text-4xl font-extrabold text-center drop-shadow-lg">Aura: Your AI Programming Tutor</h1>
-                        </div>
-                        <p className="text-center text-sm md:text-base mt-2 opacity-90">Your personal guide to programming languages and coding!</p>
-                    </header>
-
-                    {/* Main Chat Area */}
-                    <div className="flex-1 overflow-hidden p-4 flex flex-col max-w-4xl mx-auto w-full">
-                        {/* Language Input - Select Dropdown */}
-                        <div className="mb-6 p-4 bg-white rounded-xl shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                            <label htmlFor="language-select" className="text-gray-700 font-semibold text-lg">
-                                Select Language Context:
-                            </label>
-                            <select
-                                id="language-select"
-                                value={programmingLanguage}
-                                onChange={(e) => setProgrammingLanguage(e.target.value)}
-                                className="flex-1 p-3 border border-gray-300 rounded-lg bg-white appearance-none focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition duration-300 shadow-sm cursor-pointer
-                                           sm:max-w-xs md:max-w-sm lg:max-w-md"
-                            >
-                                {programmingLanguages.map((lang) => (
-                                    <option key={lang} value={lang}>
-                                        {lang}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Chat History Display */}
-                        <div className="flex-1 overflow-y-auto p-4 bg-white rounded-xl shadow-lg mb-6 custom-scrollbar border border-gray-200">
-                            {messages.length === 0 ? (
-                                <div className="text-center text-gray-500 mt-10 p-4">
-                                    <p className="text-xl font-medium mb-2">Welcome to Aura!</p>
-                                    <p className="text-base">Ask Aura anything about programming concepts, syntax, or debugging.</p>
-                                    <p className="text-sm mt-2">Start by selecting a language above, or just ask a general question.</p>
-                                </div>
+            return React.createElement('div', { className: 'flex flex-col h-screen bg-gray-100 font-sans' },
+                React.createElement('div', { className: 'flex-1 flex flex-col p-8 overflow-hidden' },
+                    React.createElement('header', { className: 'mb-8 pb-4 border-b border-gray-300' },
+                        React.createElement('h1', { className: 'text-4xl font-extrabold text-gray-900 leading-tight' }, 'Aura')
+                    ),
+                    React.createElement('div', { className: 'flex-1 overflow-auto bg-white p-6 rounded-2xl shadow-xl flex flex-col' },
+                        React.createElement('div', { className: 'flex-1 p-6 overflow-y-auto custom-scrollbar' },
+                            chatHistory.length === 0 ? (
+                                React.createElement('div', { className: 'text-center text-gray-500 text-lg mt-20' }, 'Start a conversation with Aura! Ask me anything about code or concepts.')
                             ) : (
-                                messages.map((msg, index) => (
-                                    <div
-                                        key={index}
-                                        className={`mb-4 p-4 rounded-xl max-w-[90%] md:max-w-[80%] lg:max-w-[70%] relative shadow-md
-                                            ${msg.type === 'user'
-                                                ? 'bg-blue-500 text-white self-end ml-auto rounded-br-none'
-                                                : 'bg-gray-200 text-gray-800 self-start mr-auto rounded-bl-none'
-                                            }`}
-                                    >
-                                        <p className="font-bold text-sm mb-2 opacity-90">
-                                            {msg.type === 'user' ? 'You' : 'Aura'}
-                                        </p>
-                                        {/* Using dangerouslySetInnerHTML to render formatted text */}
-                                        <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: formatTextForDisplay(msg.text) }}></div>
-                                    </div>
-                                ))
-                            )}
-                            {/* Loading indicator */}
-                            {isLoading && (
-                                <div className="mb-4 p-4 rounded-xl bg-gray-200 self-start mr-auto shadow-md animate-pulse rounded-bl-none max-w-[90%] md:max-w-[80%] lg:max-w-[70%]">
-                                    <p className="font-bold text-sm mb-2 opacity-90">Aura</p>
-                                    <div className="flex items-center space-x-2">
-                                        <span className="block w-3 h-3 bg-gray-500 rounded-full animate-bounce-slow" style={{ animationDelay: '0s' }}></span>
-                                        <span className="block w-3 h-3 bg-gray-500 rounded-full animate-bounce-slow" style={{ animationDelay: '0.2s' }}></span>
-                                        <span className="block w-3 h-3 bg-gray-500 rounded-full animate-bounce-slow" style={{ animationDelay: '0.4s' }}></span>
-                                        <p className="text-gray-700 ml-2">Aura is thinking...</p>
-                                    </div>
-                                </div>
-                            )}
-                            <div ref={messagesEndRef} /> {/* Scroll target */}
-                        </div>
-
-                        {/* Message Input and Controls */}
-                        <div className="flex flex-col sm:flex-row items-center p-4 bg-white rounded-xl shadow-lg gap-3">
-                            <input
-                                type="text"
-                                value={currentMessage}
-                                onChange={(e) => setCurrentMessage(e.target.value)}
-                                onKeyPress={(e) => {
-                                    if (e.key === 'Enter' && !isLoading) {
-                                        handleSendMessage();
-                                    }
-                                }}
-                                placeholder="Type your programming question here..."
-                                className="flex-1 w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition duration-300 shadow-sm"
-                                disabled={isLoading}
-                                aria-label="Type your programming question"
-                            />
-                            <div className="flex w-full sm:w-auto space-x-2">
-                                <button
-                                    onClick={handleSendMessage}
-                                    className={`flex-1 sm:flex-none bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold
-                                        ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    disabled={isLoading}
-                                    aria-label="Send message"
-                                >
-                                    Ask Aura
-                                </button>
-                                <button
-                                    onClick={handleClearChat}
-                                    className="flex-1 sm:flex-none bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition duration-300 transform hover:scale-105 active:scale-95 shadow-md font-semibold"
-                                    aria-label="Clear chat"
-                                >
-                                    Clear Chat
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                chatHistory.map((msg, index) =>
+                                    React.createElement('div', {
+                                        key: index, // Use index as key since IDs are not persistent
+                                        className: `flex mb-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`
+                                    },
+                                        React.createElement('div', {
+                                            className: `max-w-3/4 p-4 rounded-xl shadow-md text-gray-800 ${msg.role === 'user' ? 'bg-blue-200 rounded-br-none' : 'bg-gray-200 rounded-bl-none'}`
+                                        },
+                                            React.createElement('div', { className: 'whitespace-pre-wrap' },
+                                                renderMessageContent(msg.text)
+                                            ),
+                                            React.createElement('span', { className: 'block text-xs text-gray-500 mt-1 text-right' },
+                                                new Date(msg.timestamp).toLocaleTimeString() // Format local timestamp
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
+                            isLoading && (
+                                React.createElement('div', { className: 'flex justify-start mb-4' },
+                                    React.createElement('div', { className: 'max-w-3/4 p-4 rounded-xl shadow-md bg-gray-200 rounded-bl-none' },
+                                        React.createElement('div', { className: 'flex items-center' },
+                                            React.createElement('div', { className: 'animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2' }),
+                                            React.createElement('span', { className: 'text-gray-700' }, 'Thinking...')
+                                        )
+                                    )
+                                )
+                            ),
+                            React.createElement('div', { ref: messagesEndRef })
+                        ),
+                        React.createElement('div', { className: 'p-4 border-t border-gray-200 bg-white flex items-center rounded-b-xl' },
+                            React.createElement('textarea', {
+                                className: 'flex-1 p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mr-3 text-base',
+                                rows: '2',
+                                placeholder: 'Ask Aura a question...',
+                                value: inputMessage,
+                                onChange: (e) => setInputMessage(e.target.value),
+                                onKeyPress: handleKeyPress,
+                                disabled: isLoading
+                            }),
+                            React.createElement('button', {
+                                onClick: handleSendMessage,
+                                className: 'bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed',
+                                disabled: isLoading || inputMessage.trim() === ''
+                            }, 'Send')
+                        )
+                    )
+                ),
+                messageBox && React.createElement(MessageBox, { message: messageBox.message, onClose: messageBox.onClose })
             );
-        }
+        };
 
-        // Render the React App component into the 'root' div
-        ReactDOM.render(<App />, document.getElementById('root'));
+        // Render the Aura component into the root div
+        window.onload = function() {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(React.createElement(Aura));
+        };
     </script>
 </body>
 </html>
-
