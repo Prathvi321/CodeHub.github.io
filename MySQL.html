@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL Notes - CodeHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="code-bg"></div>
+
+    <div class="loading-screen">
+        <div class="loading-animation">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+    </div>
+
+    <button class="theme-toggle">Toggle Theme</button>
+
+    <header>
+        <div class="header-bg"></div>
+        <nav>
+            <div class="logo">CodeHub</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li> <li><a href="#languages">Languages</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#developer">Developer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="notes-section languages"> <div class="languages-container">
+            <h2 class="section-title">MySQL Notes</h2>
+
+            <div class="notes-grid">
+                <div class="language-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">DB</div>
+                        <h3>Introduction to MySQL</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>MySQL is a widely used open-source Relational Database Management System (RDBMS).</p>
+                        <ul>
+                            <li>Relational Database Management System (RDBMS)</li>
+                            <li>Client-Server Architecture</li>
+                            <li>Key Features: Scalability, Security, High Availability</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">T</div>
+                        <h3>Data Types</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Common MySQL data types:</p>
+                        <ul>
+                            <li><strong>Numeric:</strong> INT, TINYINT, FLOAT, DOUBLE, DECIMAL</li>
+                            <li><strong>String:</strong> CHAR, VARCHAR, TEXT, BLOB</li>
+                            <li><strong>Date/Time:</strong> DATE, TIME, DATETIME, TIMESTAMP, YEAR</li>
+                            <li><strong>Boolean:</strong> BOOL or BOOLEAN (usually TINYINT(1))</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">DDL</div>
+                        <h3>DDL (Data Definition Language)</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Commands for defining and managing database structures:</p>
+                        <ul>
+                            <li><code>CREATE DATABASE</code>: Creates a new database.</li>
+                            <li><code>USE DATABASE</code>: Selects a database.</li>
+                            <li><code>CREATE TABLE</code>: Creates a new table.</li>
+                            <li><code>ALTER TABLE</code>: Modifies an existing table.</li>
+                            <li><code>DROP TABLE</code>: Deletes a table.</li>
+                            <li><code>DROP DATABASE</code>: Deletes a database.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">DML</div>
+                        <h3>DML (Data Manipulation Language)</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Commands for managing data within tables:</p>
+                        <ul>
+                            <li><code>INSERT INTO</code>: Adds new rows.</li>
+                            <li><code>SELECT</code>: Retrieves data.</li>
+                            <li><code>UPDATE</code>: Modifies existing rows.</li>
+                            <li><code>DELETE</code>: Removes rows.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <div class="language-card wide-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">SQL</div>
+                        <h3>Basic Queries</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Creating a Database:</strong></p>
+                        <pre><code class="sql-code">CREATE DATABASE mydatabase;</code></pre>
+                        <p><strong>Using a Database:</strong></p>
+                        <pre><code class="sql-code">USE mydatabase;</code></pre>
+                        <p><strong>Creating a Table:</strong></p>
+                        <pre><code class="sql-code">CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    registration_date DATE
+);</code></pre>
+                        <p><strong>Inserting Data:</strong></p>
+                        <pre><code class="sql-code">INSERT INTO users (name, email, registration_date)
+VALUES ('John Doe', 'john.doe@example.com', '2024-05-28');</code></pre>
+                        <p><strong>Selecting Data:</strong></p>
+                        <pre><code class="sql-code">SELECT * FROM users WHERE name = 'John Doe';</code></pre>
+                    </div>
+                </div>
+
+                <div class="language-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">C</div>
+                        <h3>Clauses</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Keywords to refine queries:</p>
+                        <ul>
+                            <li><code>WHERE</code>: Filters records.</li>
+                            <li><code>ORDER BY</code>: Sorts results.</li>
+                            <li><code>GROUP BY</code>: Groups rows.</li>
+                            <li><code>HAVING</code>: Filters groups.</li>
+                            <li><code>LIMIT</code>: Restricts row count.</li>
+                            <li><code>OFFSET</code>: Skips rows.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">JN</div>
+                        <h3>Joins</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Combining rows from two or more tables:</p>
+                        <ul>
+                            <li><code>INNER JOIN</code></li>
+                            <li><code>LEFT JOIN</code></li>
+                            <li><code>RIGHT JOIN</code></li>
+                            <li><code>FULL OUTER JOIN</code> (emulated)</li>
+                            <li><code>SELF JOIN</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">FN</div>
+                        <h3>Functions</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Built-in operations:</p>
+                        <ul>
+                            <li><strong>Aggregate:</strong> <code>COUNT()</code>, <code>SUM()</code>, <code>AVG()</code>, <code>MIN()</code>, <code>MAX()</code></li>
+                            <li><strong>String:</strong> <code>CONCAT()</code>, <code>LENGTH()</code>, <code>SUBSTRING()</code></li>
+                            <li><strong>Date/Time:</strong> <code>NOW()</code>, <code>CURDATE()</code>, <code>DATE_FORMAT()</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal">
+                     <div class="card-header">
+                        <div class="language-icon">IX</div>
+                        <h3>Indexes</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Improve query performance by enabling faster data retrieval.</p>
+                        <pre><code class="sql-code">CREATE INDEX idx_lastname ON employees (lastname);</code></pre>
+                    </div>
+                </div>
+
+                <div class="language-card reveal">
+                     <div class="card-header">
+                        <div class="language-icon">TR</div>
+                        <h3>Transactions</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Ensure ACID properties (Atomicity, Consistency, Isolation, Durability).</p>
+                        <pre><code class="sql-code">START TRANSACTION;
+-- SQL statements
+COMMIT; -- or ROLLBACK;</code></pre>
+                    </div>
+                </div>
+
+                <div class="language-card wide-card reveal">
+                    <div class="card-header">
+                        <div class="language-icon">BP</div>
+                        <h3>Best Practices</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Normalize your database design.</li>
+                            <li>Use appropriate data types for columns.</li>
+                            <li>Write clear, readable, and well-formatted SQL.</li>
+                            <li>Optimize queries: use <code>EXPLAIN</code> to analyze.</li>
+                            <li>Secure your database: strong passwords, minimal privileges.</li>
+                            <li>Regularly backup your data.</li>
+                            <li>Avoid <code>SELECT *</code> in production for specific needs.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> CodeHub. All rights reserved.</p>
+            <p>MySQL Notes Page - Styled to Match</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple scroll reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        function revealOnScroll() {
+            const windowHeight = window.innerHeight;
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 50) { // 50px offset
+                    el.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+
+        // Loading screen removal
+        window.addEventListener('load', () => {
+            const loadingScreen = document.querySelector('.loading-screen');
+            // The CSS animation 'fadeOut' handles the removal after 2s + 1s duration
+            // If you want to remove it from DOM after animation:
+            // setTimeout(() => {
+            //    if(loadingScreen) loadingScreen.remove();
+            // }, 3000); // 2s delay + 1s animation
+        });
+
+        // Placeholder for theme toggle functionality
+        const themeToggleButton = document.querySelector('.theme-toggle');
+        if (themeToggleButton) {
+            themeToggleButton.addEventListener('click', () => {
+                // Add your theme toggle logic here
+                // For example, document.body.classList.toggle('light-mode');
+                // You would need to define light-mode styles in your CSS.
+                alert('Theme toggle clicked! Implement your theme switching logic.');
+            });
+        }
+    </script>
+</body>
+</html>
