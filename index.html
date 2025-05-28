@@ -4,243 +4,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="images/coding.ico" type="image/x-icon">
-    <title>Code Hub - Your Coding Resource</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>CodeHub</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/all.min.css">
+    <style>
+
+    </style>
+    <!-- Font Awesome CDN for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     <script src="js/youware-lib.1747145198.js" id="yourware-lib"></script>
 </head>
 
 <body>
-    <!-- Loader -->
-    <div class="loader-container">
-        <div class="loader"></div>
-        <div class="loader-text">CODE HUB</div>
-    </div>
-
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <div class="logo">
-                    <a href="index.html">CODE HUB</a>
-                </div>
-
-                <ul class="nav-links">
-                    <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="#languages" class="nav-link">Languages</a></li>
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-                            <i class="fas fa-moon"></i>
-                        </button></li>
-                </ul>
-            </nav>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-animation">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
         </div>
-    </header>
-    <div class="floating-circle">
+    </div>
+    <div class="floating-circle" style="position: fixed; bottom: 20px; right: 20px; z-index: 99999; display: flex; align-items: center; justify-content: center;">
         <a href="Aura.html">
-            <img src="images/robot.png" width="45px">
+            <img src="images/robot.png" width="45px" alt="Aura Bot">
         </a>
     </div>
+    <!-- Code Background -->
+    <div class="code-bg"></div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+
+    <header>
+        <div class="header-bg"></div>
+        <nav>
+            <div class="logo">CodeHub</div>
+            <ul class="nav-links">
+                <li><a href="#languages">Languages</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#developer">Developer</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <main>
         <section class="hero">
-            <div class="shapes">
-                <div class="shape shape-1"></div>
-                <div class="shape shape-2"></div>
-                <div class="shape shape-3"></div>
-            </div>
-            <div class="container">
-                <div class="hero-content">
-                    <h1>Coding Knowledge at Your Fingertips</h1>
-                    <p>A curated collection of programming notes, snippets, and resources to help you on your coding
-                        journey. Learn, explore, and build with confidence.</p>
-                    <div class="hero-buttons">
-                        <a href="#languages" class="btn">
-                            <i class="fas fa-code"></i> Explore Languages
-                        </a>
-                        <a href="#about" class="btn btn-outline">
-                            <i class="fas fa-user"></i> About Me
-                        </a>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Master the Art of Programming</h1>
+                    <p>Embark on your coding journey with our cutting-edge platform featuring Python, MySQL, C++, and
+                        many more languages. Transform your ideas into reality.</p>
+                    <div class="hero-cta">
+                        <a href="#languages" class="btn btn-primary">Start Learning</a>
+                        <a href="#features" class="btn btn-secondary">Explore Features</a>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section class="about-section" id="about">
-            <div class="container">
-                <div class="about-content">
-                    <div class="about-image reveal-left">
-                        <img src="images/g165ee1071eef86b9894923a4538b5b87e4ba377d47d0a6cf4a1b9db05669260db7869728d266c701874b2df3a22a60e90e0a77e298c13308eea8fb01010b615b_1280.png"
-                            alt="Developer Profile" style="width: 300px;">
-                    </div>
-                    <div class="about-info reveal-right">
-                        <h2>About the Developer</h2>
-                        <p>Hello! Myself Prathvi Singh Thakur.</p>
-                        <p>I'm a passionate software developer with a love for problem-solving and creating elegant
-                            solutions. With experience across multiple programming languages and frameworks, I enjoy
-                            sharing knowledge and helping others on their coding journey.</p>
-                        <p>These notes represent my learning path and are constantly updated with new discoveries, best
-                            practices, and useful code snippets that I find valuable in my day-to-day work.</p>
-                        <div class="social-links">
-                            <a href="https://github.com/Prathvi321" class="social-link" target="_blank"
-                                rel="noopener"><i class="fab fa-github"></i></a>
-                            <a href="https://www.linkedin.com/in/prathvi-singh-thakur-bba493333" class="social-link"
-                                target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
-                            <a href="https://www.instagram.com/prathvithakur20?igsh=NW9tZGw3ZW9jNnZi"
-                                class="social-link" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                            <a href="tel:+918692985091" class="social-link"><i class="fa-solid fa-phone"></i></a>
+                <div class="hero-visual">
+                    <div class="floating-cards">
+                        <div class="floating-card">
+                            <div style="font-family: 'JetBrains Mono', monospace; color: #10b981;">print("Hello World!")
+                            </div>
+                        </div>
+                        <div class="floating-card">
+                            <div style="font-family: 'JetBrains Mono', monospace; color: #06b6d4;">SELECT * FROM users;
+                            </div>
+                        </div>
+                        <div class="floating-card">
+                            <div style="font-family: 'JetBrains Mono', monospace; color: #f59e0b;">#include <iostream>
+                                </iostream>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="language-section" id="languages">
-            <div class="container">
-                <div class="section-header reveal">
-                    <h2 class="section-title">Programming Languages</h2>
-                    <p class="section-subtitle">Explore my notes and resources for various programming languages and
-                        technologies</p>
-                </div>
-                <div class="language-grid">
+        <section id="languages" class="languages">
+            <div class="languages-container">
+                <h2 class="section-title reveal">Programming Languages</h2>
+                <div class="languages-grid">
                     <div class="language-card reveal">
                         <div class="card-header">
+                            <div class="language-icon"
+                                style="background: linear-gradient(135deg, #3776ab 0%, #ffd343 100%);">Py</div>
                             <h3>Python</h3>
                         </div>
                         <div class="card-body">
-                            <p>Python notes, examples, and best practices for beginners and advanced programmers.</p>
-                            <a href="pages/python.html" class="btn">
-                                <i class="fab fa-python"></i> View Notes
-                            </a>
+                            <p>Master the world's most versatile programming language. From AI to web development,
+                                Python powers everything.</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 95%;"></div>
+                            </div>
+                            <a href="#" class="learn-btn">Learn Python →</a>
                         </div>
                     </div>
 
                     <div class="language-card reveal">
                         <div class="card-header">
+                            <div class="language-icon"
+                                style="background: linear-gradient(135deg, #00758f 0%, #f29111 100%);">My</div>
                             <h3>MySQL</h3>
                         </div>
                         <div class="card-body">
-                            <p>Database concepts, SQL queries, and optimization techniques for MySQL.</p>
-                            <a href="pages/mysql.html" class="btn">
-                                <i class="fas fa-database"></i> View Notes
-                            </a>
+                            <p>Dive deep into database management with the world's most popular open-source database
+                                system.</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 88%;"></div>
+                            </div>
+                            <a href="#" class="learn-btn">Learn MySQL →</a>
                         </div>
                     </div>
 
                     <div class="language-card reveal">
                         <div class="card-header">
-                            <h3>HTML</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>HTML fundamentals, semantic markup, and structure for modern web development.</p>
-                            <a href="pages/html.html" class="btn">
-                                <i class="fab fa-html5"></i> View Notes
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="language-card reveal">
-                        <div class="card-header">
-                            <h3>CSS</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>Styling techniques, layouts, animations, and responsive design with CSS.</p>
-                            <a href="pages/css.html" class="btn">
-                                <i class="fab fa-css3-alt"></i> View Notes
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="language-card reveal">
-                        <div class="card-header">
-                            <h3>JavaScript</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>JavaScript concepts, DOM manipulation, async programming, and modern ES6+ features.</p>
-                            <a href="pages/javascript.html" class="btn">
-                                <i class="fab fa-js"></i> View Notes
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="language-card reveal">
-                        <div class="card-header">
-                            <h3>C</h3>
-                        </div>
-                        <div class="card-body">
-                            <p>Core C programming concepts, memory management, and common algorithms.</p>
-                            <a href="pages/c.html" class="btn">
-                                <i class="fas fa-code"></i> View Notes
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="language-card reveal">
-                        <div class="card-header">
+                            <div class="language-icon"
+                                style="background: linear-gradient(135deg, #00599c 0%, #004482 100%);">C++</div>
                             <h3>C++</h3>
                         </div>
                         <div class="card-body">
-                            <p>Object-oriented programming in C++, STL, and modern C++ features.</p>
-                            <a href="pages/cpp.html" class="btn">
-                                <i class="fas fa-code"></i> View Notes
-                            </a>
+                            <p>Build high-performance applications with this powerful system programming language used
+                                in games and enterprise software.</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 78%;"></div>
+                            </div>
+                            <a href="#" class="learn-btn">Learn C++ →</a>
                         </div>
+                    </div>
+
+                    <div class="language-card reveal">
+                        <div class="card-header">
+                            <div class="language-icon"
+                                style="background: linear-gradient(135deg, #f7df1e 0%, #f0db4f 100%);">JS</div>
+                            <h3>JavaScript</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Create interactive web experiences and full-stack applications with the language of the
+                                web.</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%;"></div>
+                            </div>
+                            <a href="#" class="learn-btn">Learn JavaScript →</a>
+                        </div>
+                    </div>
+
+                    <div class="language-card reveal">
+                        <div class="card-header">
+                            <div class="language-icon"
+                                style="background: linear-gradient(135deg, #ed8b00 0%, #5382a1 100%);">Jv</div>
+                            <h3>Java</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Write once, run anywhere. Master enterprise-grade applications with this versatile
+                                programming language.</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%;"></div>
+                            </div>
+                            <a href="#" class="learn-btn">Learn Java →</a>
+                        </div>
+                    </div>
+
+                    <div class="language-card reveal">
+                        <div class="card-header">
+                            <div class="language-icon"
+                                style="background: linear-gradient(135deg, #777bb4 0%, #8892bf 100%);">Php</div>
+                            <h3>PHP</h3>
+                        </div>
+                        <div class="card-body">
+                            <p>Power dynamic websites and web applications with this server-side scripting language
+                                trusted by millions.</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 82%;"></div>
+                            </div>
+                            <a href="#" class="learn-btn">Learn PHP →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="features-container">
+                <h2 class="section-title reveal">Why Choose CodeHub?</h2>
+                <div class="features-grid">
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Interactive Learning</h3>
+                        <p>Learn by doing with our hands-on coding environment that provides instant feedback and
+                            real-time collaboration.</p>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Personalized Path</h3>
+                        <p>AI-powered learning paths adapted to your skill level and goals, ensuring optimal progress
+                            every step of the way.</p>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">🌟</div>
+                        <h3>Real Projects</h3>
+                        <p>Build impressive portfolio projects that showcase your skills to potential employers and
+                            clients.</p>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">👥</div>
+                        <h3>Global Community</h3>
+                        <p>Connect with developers worldwide, participate in code reviews, and collaborate on exciting
+                            projects.</p>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Achievements</h3>
+                        <p>Earn badges, certificates, and recognition as you complete challenges and master new
+                            technologies.</p>
+                    </div>
+
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Lightning Fast</h3>
+                        <p>Our optimized platform ensures smooth learning experience with instant code execution and
+                            zero setup time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="developer" class="developer">
+            <div class="developer-container">
+                <h2 class="section-title reveal">Meet the Developer</h2>
+                <div class="developer-card reveal">
+                    <div class="developer-avatar"><img
+                            src="images/g165ee1071eef86b9894923a4538b5b87e4ba377d47d0a6cf4a1b9db05669260db7869728d266c701874b2df3a22a60e90e0a77e298c13308eea8fb01010b615b_1280.png"
+                            alt="" width="100px"></div>
+                    <h3 class="developer-name">Prathvi Singh Thakur</h3>
+                    <p class="developer-title">Senior Full Stack Engineer & Tech Educator</p>
+                    <p class="developer-bio">
+                        With over 10 years of experience at leading tech companies including Google and Microsoft,
+                        John is passionate about democratizing programming education. He has mentored over 10,000
+                        developers and believes that everyone should have access to quality coding education.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://github.com/Prathvi321" class="social-link" target="_blank" rel="noopener">
+                            <i class="fab fa-github" style="font-size:1.5rem;"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/prathvi-singh-thakur-bba493333" class="social-link"
+                            target="_blank" rel="noopener">
+                            <i class="fab fa-linkedin" style="font-size:1.5rem;"></i>
+                        </a>
+                        <a href="https://www.instagram.com/prathvithakur20?igsh=NW9tZGw3ZW9jNnZi" class="social-link"
+                            target="_blank" rel="noopener">
+                            <i class="fab fa-instagram" style="font-size:1.5rem;"></i>
+                        </a>
+                        <a href="tel:+918692985091" class="social-link">
+                            <i class="fa-solid fa-phone" style="font-size:1.5rem;"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>Dev Notes</h3>
-                    <p>A curated collection of programming notes and resources for developers of all skill levels.</p>
-                    <div class="social-links">
-                        <a href="https://github.com/Prathvi321" class="social-link" target="_blank" rel="noopener"><i
-                                class="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/prathvi-singh-thakur-bba493333" class="social-link"
-                            target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
-                        <a href="https://www.instagram.com/prathvithakur20?igsh=NW9tZGw3ZW9jNnZi" class="social-link"
-                            target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
-                        <a href="tel:+918692985091" class="social-link"><i class="fa-solid fa-phone"></i></a>
-
-                    </div>
-                </div>
-
-                <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                        <li><a href="#languages"><i class="fas fa-code"></i> Languages</a></li>
-                        <li><a href="#about"><i class="fas fa-user"></i> About</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-links">
-                    <h4>Top Languages</h4>
-                    <ul>
-                        <li><a href="pages/python.html"><i class="fab fa-python"></i> Python</a></li>
-                        <li><a href="pages/javascript.html"><i class="fab fa-js"></i> JavaScript</a></li>
-                        <li><a href="pages/html.html"><i class="fab fa-html5"></i> HTML</a></li>
-                        <li><a href="pages/css.html"><i class="fab fa-css3-alt"></i> CSS</a></li>
-                    </ul>
-                </div>
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">Home</a>
+                <a href="#languages">Languages</a>
+                <a href="#features">Features</a>
+                <a href="#developer">Developer</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
             </div>
-
-            <div class="copyright">
-                © <span id="current-year">2025</span> CODE HUB. All rights reserved.
-            </div>
+            <p>© 2024 CodeLearn. Crafted with ❤️ for developers worldwide.</p>
         </div>
     </footer>
 
-    <script src="js/script.js"></script>
     <script>
-        // Update copyright year
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+        // Loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelector('.loading-screen').style.display = 'none';
+            }, 2000);
+        });
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Theme toggle (basic implementation)
+        function toggleTheme() {
+            const button = document.querySelector('.theme-toggle');
+            if (button.textContent.includes('Dark')) {
+                button.textContent = '☀️ Light';
+                document.documentElement.style.setProperty('--primary-bg', '#ffffff');
+                document.documentElement.style.setProperty('--text-primary', '#000000');
+                document.documentElement.style.setProperty('--text-secondary', '#666666');
+            } else {
+                button.textContent = '🌙 Dark';
+                document.documentElement.style.setProperty('--primary-bg', '#0a0a0f');
+                document.documentElement.style.setProperty('--text-primary', '#ffffff');
+                document.documentElement.style.setProperty('--text-secondary', '#94a3b8');
+            }
+        }
+
+        // Parallax effect for floating cards
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating-card');
+            const speed = 0.5;
+
+            parallax.forEach((element, index) => {
+                const yPos = -(scrolled * speed * (index + 1) * 0.1);
+                element.style.transform = `translateY(${yPos}px) rotate(${yPos * 0.01}deg)`;
+            });
+        });
+
+        // Dynamic progress bar animation on scroll
+        const progressBars = document.querySelectorAll('.progress-fill');
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressBar = entry.target;
+                    const width = progressBar.style.width;
+                    progressBar.style.width = '0';
+                    setTimeout(() => {
+                        progressBar.style.width = width;
+                    }, 200);
+                }
+            });
+        });
+
+        progressBars.forEach(bar => {
+            progressObserver.observe(bar);
+        });
     </script>
 
 </body>
