@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../images/coding.ico">
+    <title>Python - CodeHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode">
+    <div class="code-bg absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 opacity-20 -z-10"></div>
+
+    <div class="loading-screen">
+        <div class="loading-animation">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+    </div>
+
+    <header class="relative bg-gray-800 bg-opacity-70 backdrop-blur-md shadow-lg py-4 z-10">
+        <div class="header-bg absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-gray-900 opacity-80 -z-10"></div>
+        <nav class="container mx-auto flex justify-between items-center px-4">
+            <div class="logo text-3xl font-bold text-blue-400"><a href="../index.html">CodeHub</a></div>
+            <ul class="nav-links flex space-x-6">
+                <li><a href="../index.html" class="text-gray-300 hover:text-blue-400 transition-colors duration-200 text-lg">Home</a></li>
+                <li><a href="../index.html#languages" class="text-gray-300 hover:text-blue-400 transition-colors duration-200 text-lg">Languages</a></li>
+                <li><a href="../index.html#features" class="text-gray-300 hover:text-blue-400 transition-colors duration-200 text-lg">Features</a></li>
+                <li><a href="../index.html#developer" class="text-gray-300 hover:text-blue-400 transition-colors duration-200 text-lg">Developer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="notes-section languages py-12 px-4 min-h-screen flex items-center justify-center">
+        <div class="languages-container max-w-7xl mx-auto w-full">
+            <h2 class="section-title text-5xl font-extrabold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 reveal">Python</h2>
+
+            <div class="notes-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4"><a href="Introduction.html">
+                        <h3 class="text-2xl font-semibold text-blue-300">Introduction to Python</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Python is a high-level, interpreted, general-purpose programming language.</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Executes code line by line.</li>
+                            <li>Handles memory management automatically.</li>
+                            <li>Used in web dev, data science, AI, automation.</li>
+                            <li>Simple, readable syntax with indentation.</li>
+                            <li>Features a large standard library.</li>
+                        </ul>
+                    </a>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-purple-300">Variables & Data Types</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Variables store data; Python is dynamically typed.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Numeric:</strong> <code class="text-yellow-300">int</code>, <code class="text-yellow-300">float</code>, <code class="text-yellow-300">complex</code>.</li>
+                            <li><strong>Sequence:</strong> <code class="text-yellow-300">str</code>, <code class="text-yellow-300">list</code>, <code class="text-yellow-300">tuple</code>.</li>
+                            <li><strong>Mapping:</strong> <code class="text-yellow-300">dict</code> (key-value pairs).</li>
+                            <li><strong>Set:</strong> <code class="text-yellow-300">set</code> (unique elements), <code class="text-yellow-300">frozenset</code>.</li>
+                            <li><strong>Boolean:</strong> <code class="text-yellow-300">bool</code> (<code class="text-yellow-300">True</code>/<code class="text-yellow-300">False</code>).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-green-300">Operators</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Symbols performing operations on values.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Arithmetic:</strong> <code class="text-yellow-300">+ - * / % ** //</code></li>
+                            <li><strong>Comparison:</strong> <code class="text-yellow-300">== != > < >= <=</code></li>
+                            <li><strong>Logical:</strong> <code class="text-yellow-300">and or not</code></li>
+                            <li><strong>Assignment:</strong> <code class="text-yellow-300">= += -= *= /=</code> etc.</li>
+                            <li><strong>Identity/Membership:</strong> <code class="text-yellow-300">is</code>, <code class="text-yellow-300">in</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-red-300">Control Flow</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Determines execution order of code.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Conditional:</strong> <code class="text-yellow-300">if</code>, <code class="text-yellow-300">elif</code>, <code class="text-yellow-300">else</code> for branching.</li>
+                            <li><strong>Loops:</strong> <code class="text-yellow-300">for</code> (iterate sequences), <code class="text-yellow-300">while</code> (repeat while condition is true).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-yellow-300">Functions</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Reusable blocks of code for specific tasks.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Definition:</strong> Use <code class="text-yellow-300">def</code>.</li>
+                            <li><strong>Parameters:</strong> Inputs to the function.</li>
+                            <li><strong>Return Value:</strong> Result sent back using <code class="text-yellow-300">return</code>.</li>
+                            <li><strong>Lambda:</strong> Small, anonymous functions.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card wide-card reveal col-span-1 md:col-span-2 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-indigo-300">Object-Oriented Programming (OOP)</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Paradigm based on "objects" containing data and code.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Class:</strong> Blueprint for objects.</li>
+                            <li><strong>Object:</strong> Instance of a class.</li>
+                            <li><strong>Attributes/Methods:</strong> Object data and functions.</li>
+                            <li><strong>Inheritance:</strong> Class inherits from another.</li>
+                            <li><strong>Polymorphism/Encapsulation:</strong> Key OOP concepts.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-pink-300">Modules & Packages</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Organize code for structure and reusability.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Module:</strong> A <code class="text-yellow-300">.py</code> file with code.</li>
+                            <li><strong>Importing:</strong> Use <code class="text-yellow-300">import</code> statement.</li>
+                            <li><strong>Package:</strong> Directory of modules (<code class="text-yellow-300">__init__.py</code>).</li>
+                            <li><strong>Virtual Environments:</strong> Isolated environments for dependencies.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-teal-300">File I/O</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Read from and write to files.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Opening:</strong> <code class="text-yellow-300">open()</code> with modes (<code class="text-yellow-300">'r'</code>, <code class="text-yellow-300">'w'</code>, <code class="text-yellow-300">'a'</code>, etc.).</li>
+                            <li>Use <code class="text-yellow-300">with open(...)</code> for proper file closing.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-orange-300">Error Handling</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Manage unexpected situations (exceptions) gracefully.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><code class="text-yellow-300">try</code>: Code to monitor.</li>
+                            <li><code class="text-yellow-300">except</code>: Catches specific exceptions.</li>
+                            <li><code class="text-yellow-300">finally</code>: Always executes.</li>
+                            <li>Use <code class="text-yellow-300">raise</code> to trigger exceptions.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card wide-card reveal col-span-1 md:col-span-2 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-gray-300">Advanced Topics (Brief)</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Decorators:</strong> Modify function/method behavior.</li>
+                            <li><strong>Generators:</strong> Functions yielding iterators for memory efficiency.</li>
+                            <li><strong>Context Managers:</strong> Ensure proper resource handling (<code class="text-yellow-300">with</code> statement).</li>
+                            <li><strong>Concurrency:</strong> Threading (within process) and Multiprocessing (separate processes).</li>
+                            <li><strong>Asynchronous Programming (<code class="text-yellow-300">asyncio</code>):</strong> Non-blocking I/O with <code class="text-yellow-300">async</code>/<code class="text-yellow-300">await</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 bg-opacity-90 py-8 text-gray-400 text-center shadow-inner">
+        <div class="footer-container container mx-auto px-4">
+            <div class="footer-links mb-4 space-x-6">
+                <a href="#" class="hover:text-blue-400 transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="hover:text-blue-400 transition-colors duration-200">Terms of Service</a>
+                <a href="#" class="hover:text-blue-400 transition-colors duration-200">Contact</a>
+            </div>
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> CodeHub. All rights reserved.</p>
+            <p class="text-sm mt-2">Python Notes Page - Styled to Match</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple scroll reveal functionality
+        const revealElements = document.querySelectorAll('.reveal');
+        function revealOnScroll() {
+            const windowHeight = window.innerHeight;
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                // Add 'active' class when element is 100px from the bottom of the viewport
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add('active');
+                } else {
+                    // Optionally remove 'active' class if element scrolls out of view upwards
+                    el.classList.remove('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check on page load
+
+        // Loading screen removal
+        window.addEventListener('load', () => {
+            const loadingScreen = document.querySelector('.loading-screen');
+            // The CSS animation 'fadeOut' handles the removal after 2s + 1s duration
+            // This ensures the animation plays out before potentially removing from DOM
+            setTimeout(() => {
+                if(loadingScreen) loadingScreen.remove();
+            }, 3000); // 2s delay + 1s animation duration
+        });
+
+        // Apply dark mode on load (since the toggle is removed)
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode'); // Just in case
+        });
+
+        // Function to copy code to clipboard
+        function copyCode(buttonElement) {
+            const copyContainer = buttonElement.closest('.copy-container');
+            const codeElement = copyContainer.querySelector('.python-code');
+            const feedbackElement = copyContainer.querySelector('.copy-feedback');
+
+            // Create a temporary textarea element to hold the text to be copied
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeElement.textContent;
+            document.body.appendChild(tempTextArea);
+
+            // Select the text in the textarea
+            tempTextArea.select();
+            tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                // Copy the text to the clipboard
+                document.execCommand('copy');
+                // Show feedback message
+                feedbackElement.classList.add('show');
+                setTimeout(() => {
+                    feedbackElement.classList.remove('show');
+                }, 1500); // Hide "Copied!" message after 1.5 seconds
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                // Optionally, provide an error message to the user
+            } finally {
+                // Remove the temporary textarea
+                document.body.removeChild(tempTextArea);
+            }
+        }
+    </script>
+</body>
+</html>

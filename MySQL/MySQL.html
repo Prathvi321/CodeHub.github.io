@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../images/coding.ico">
+    <title>MySQL - CodeHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for animations and specific elements not easily covered by Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+            /* Default dark mode */
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
+        }
+
+        body.light-mode {
+            background-color: #f7fafc; /* Light background */
+            color: #2d3748; /* Dark text */
+        }
+
+        /* Loading Screen Styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1a202c; /* Match dark mode background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 1s ease-in-out 2s forwards; /* Fade out after 2 seconds delay */
+        }
+
+        .loading-animation {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .loading-dot {
+            width: 1rem;
+            height: 1rem;
+            background-color: #4299e1; /* Blue dot color */
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        .loading-dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; visibility: visible; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Additional styling for code blocks within cards */
+        .sql-code {
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap; /* Ensures long lines wrap */
+            word-break: break-all; /* Breaks words if necessary */
+        }
+
+        /* Theme specific styles for syntax highlighting if needed later */
+        body.light-mode .language-card pre {
+            background-color: #e2e8f0; /* Lighter background for code in light mode */
+            color: #2d3748; /* Darker text for code in light mode */
+        }
+
+        body.dark-mode .language-card pre {
+            background-color: #2d3748; /* Darker background for code in dark mode */
+            color: #e2e8f0; /* Lighter text for code in dark mode */
+        }
+
+        /* Style for the copy button and feedback message */
+        .copy-container {
+            position: relative;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: #4a5568; /* Gray-700 */
+            color: #cbd5e0; /* Gray-300 */
+            border-radius: 0.375rem; /* Rounded-md */
+            font-size: 0.75rem; /* Text-xs */
+            cursor: pointer;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .copy-container:hover .copy-button {
+            opacity: 1; /* Show on hover */
+        }
+
+        .copy-feedback {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: #48bb78; /* Green-500 */
+            color: white;
+            border-radius: 0.375rem; /* Rounded-md */
+            font-size: 0.75rem; /* Text-xs */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="code-bg absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 opacity-20 -z-10"></div>
+
+    <div class="loading-screen">
+        <div class="loading-animation">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+    </div>
+
+    <header class="relative bg-gray-800 bg-opacity-70 backdrop-blur-md shadow-lg py-4 z-10">
+        <div class="header-bg absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-800 to-gray-900 opacity-80 -z-10"></div>
+        <nav class="container mx-auto flex justify-between items-center px-4">
+            <div class="logo text-3xl font-bold text-blue-400"><a href="../index.html">CodeHub</a></div>
+            <ul class="nav-links flex space-x-6">
+                 <li><a href="../index.html" class="text-gray-300 hover:text-blue-400 transition-colors duration-200 text-lg">Home</a></li>
+                <li><a href="../index.html#languages" class="text-gray-300 hover:text-blue-400 transition-colors duration-200 text-lg">Languages</a></li>
+                <li><a href="../index.html#features" class="text-gray-300 hover:text-blue-400 transition-colors duration-200 text-lg">Features</a></li>
+                <li><a href="../index.html#developer" class="text-gray-300 hover:text-blue-400 transition-colors duration-200 text-lg">Developer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="notes-section languages py-12 px-4 min-h-screen flex items-center justify-center">
+        <div class="languages-container max-w-7xl mx-auto w-full">
+            <h2 class="section-title text-5xl font-extrabold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 reveal">MySQL</h2>
+
+            <div class="notes-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-blue-300">Introduction to MySQL</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">MySQL is a widely used open-source Relational Database Management System (RDBMS) owned by Oracle Corporation. It's a cornerstone for many web applications due to its reliability, robust performance, and ease of use.</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>Relational Database Management System (RDBMS):</strong> Organizes data into tables with rows and columns, establishing relationships between them.</li>
+                            <li><strong>Client-Server Architecture:</strong> A MySQL server manages the database, and clients (applications, command-line tools) connect to it to perform operations.</li>
+                            <li><strong>Key Features:</strong>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><strong>Scalability:</strong> Can handle small to very large datasets and high traffic.</li>
+                                    <li><strong>Security:</strong> Robust user management, access control, and encryption features.</li>
+                                    <li><strong>High Availability:</strong> Supports replication and clustering for continuous operation.</li>
+                                    <li><strong>Open Source:</strong> Free to use and modify under the GNU General Public License.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-purple-300">Data Types</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Choosing the correct data type for each column is crucial for efficient storage, data integrity, and query performance.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Numeric Types:</strong>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><code class="text-yellow-300">INT</code>: Standard integer (e.g., `INT`).</li>
+                                    <li><code class="text-yellow-300">TINYINT</code>: Very small integer, often used for boolean (0 or 1) (e.g., `TINYINT(1)`).</li>
+                                    <li><code class="text-yellow-300">FLOAT</code>, <code class="text-yellow-300">DOUBLE</code>: Floating-point numbers for approximate decimal values.</li>
+                                    <li><code class="text-yellow-300">DECIMAL(P,S)</code>: Fixed-point numbers for exact decimal values, where P is total digits and S is digits after decimal (e.g., `DECIMAL(10,2)` for currency).</li>
+                                </ul>
+                            </li>
+                            <li><strong>String Types:</strong>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><code class="text-yellow-300">CHAR(M)</code>: Fixed-length string, padded with spaces (e.g., `CHAR(10)`).</li>
+                                    <li><code class="text-yellow-300">VARCHAR(M)</code>: Variable-length string, recommended for most text data (e.g., `VARCHAR(255)`).</li>
+                                    <li><code class="text-yellow-300">TEXT</code>: For long text strings (up to 65,535 characters).</li>
+                                    <li><code class="text-yellow-300">BLOB</code>: For binary large objects (e.g., images, audio).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Date/Time Types:</strong>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><code class="text-yellow-300">DATE</code>: Stores date in 'YYYY-MM-DD' format.</li>
+                                    <li><code class="text-yellow-300">TIME</code>: Stores time in 'HH:MM:SS' format.</li>
+                                    <li><code class="text-yellow-300">DATETIME</code>: Stores date and time in 'YYYY-MM-DD HH:MM:SS' format.</li>
+                                    <li><code class="text-yellow-300">TIMESTAMP</code>: Stores date and time, automatically updated (e.g., for 'last modified' fields).</li>
+                                    <li><code class="text-yellow-300">YEAR</code>: Stores year in 2-digit or 4-digit format.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Boolean:</strong> <code class="text-yellow-300">BOOL</code> or <code class="text-yellow-300">BOOLEAN</code> are aliases for <code class="text-yellow-300">TINYINT(1)</code>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-green-300">DDL (Data Definition Language)</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">DDL commands are used to define, modify, and drop database objects like tables, databases, indexes, and views. They deal with the schema of the database.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><code class="text-yellow-300">CREATE DATABASE database_name;</code>: Creates a new database.</li>
+                            <li><code class="text-yellow-300">USE database_name;</code>: Selects the database to work with.</li>
+                            <li><code class="text-yellow-300">CREATE TABLE table_name (...);</code>: Creates a new table with specified columns and constraints.
+                                <p class="mt-2">Example:</p>
+                                <div class="copy-container">
+                                    <pre class="bg-gray-700 text-white p-3 rounded-lg mb-2 overflow-x-auto"><code class="sql-code">CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL UNIQUE,
+    price DECIMAL(10, 2) DEFAULT 0.00,
+    stock_quantity INT CHECK (stock_quantity >= 0),
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id)
+);</code></pre>
+                                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                    <span class="copy-feedback">Copied!</span>
+                                </div>
+                            </li>
+                            <li><code class="text-yellow-300">ALTER TABLE table_name ADD COLUMN column_name datatype;</code>: Modifies an existing table (add/drop columns, change data types, add constraints).
+                                <p class="mt-2">Example:</p>
+                                <div class="copy-container">
+                                    <pre class="bg-gray-700 text-white p-3 rounded-lg mb-2 overflow-x-auto"><code class="sql-code">ALTER TABLE products ADD COLUMN description TEXT;
+ALTER TABLE products MODIFY COLUMN product_name VARCHAR(150);</code></pre>
+                                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                    <span class="copy-feedback">Copied!</span>
+                                </div>
+                            </li>
+                            <li><code class="text-yellow-300">DROP TABLE table_name;</code>: Deletes an entire table, including its data and structure.</li>
+                            <li><code class="text-yellow-300">TRUNCATE TABLE table_name;</code>: Deletes all rows from a table, but keeps the table structure. It's faster than DELETE for removing all rows.</li>
+                            <li><code class="text-yellow-300">DROP DATABASE database_name;</code>: Deletes an entire database. Use with extreme caution!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-red-300">DML (Data Manipulation Language)</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">DML commands are used for managing data within schema objects. They affect the content of the database.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><code class="text-yellow-300">INSERT INTO table_name (columns) VALUES (values);</code>: Adds new rows of data into a table.
+                                <p class="mt-2">Example:</p>
+                                <div class="copy-container">
+                                    <pre class="bg-gray-700 text-white p-3 rounded-lg mb-2 overflow-x-auto"><code class="sql-code">INSERT INTO employees (first_name, last_name, email, hire_date)
+VALUES ('Jane', 'Smith', 'jane.smith@example.com', '2023-01-15');</code></pre>
+                                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                    <span class="copy-feedback">Copied!</span>
+                                </div>
+                            </li>
+                            <li><code class="text-yellow-300">SELECT columns FROM table_name WHERE condition;</code>: Retrieves data from one or more tables.
+                                <p class="mt-2">Example:</p>
+                                <div class="copy-container">
+                                    <pre class="bg-gray-700 text-white p-3 rounded-lg mb-2 overflow-x-auto"><code class="sql-code">SELECT first_name, last_name FROM employees WHERE hire_date > '2023-01-01';
+SELECT DISTINCT department FROM employees; -- Selects unique department names
+SELECT product_name AS ItemName, price FROM products; -- Aliasing a column</code></pre>
+                                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                    <span class="copy-feedback">Copied!</span>
+                                </div>
+                            </li>
+                            <li><code class="text-yellow-300">UPDATE table_name SET column1 = value1 WHERE condition;</code>: Modifies existing data in a table.
+                                <p class="mt-2">Example:</p>
+                                <div class="copy-container">
+                                    <pre class="bg-gray-700 text-white p-3 rounded-lg mb-2 overflow-x-auto"><code class="sql-code">UPDATE employees SET email = 'john.d@example.com' WHERE employee_id = 101;
+UPDATE products SET price = price * 1.10 WHERE category_id = 5;</code></pre>
+                                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                    <span class="copy-feedback">Copied!</span>
+                                </div>
+                            </li>
+                            <li><code class="text-yellow-300">DELETE FROM table_name WHERE condition;</code>: Removes rows from a table.
+                                <p class="mt-2">Example:</p>
+                                <div class="copy-container">
+                                    <pre class="bg-gray-700 text-white p-3 rounded-lg overflow-x-auto"><code class="sql-code">DELETE FROM employees WHERE status = 'inactive';
+DELETE FROM orders WHERE order_date < '2023-01-01';</code></pre>
+                                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                    <span class="copy-feedback">Copied!</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card wide-card reveal col-span-1 md:col-span-2 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-yellow-300">Basic Queries (Expanded)</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-2"><strong>Creating a Database:</strong></p>
+                        <div class="copy-container">
+                            <pre class="bg-gray-700 text-white p-3 rounded-lg mb-4 overflow-x-auto"><code class="sql-code">CREATE DATABASE IF NOT EXISTS mydatabase CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</code></pre>
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+
+                        <p class="mb-2"><strong>Using a Database:</strong></p>
+                        <div class="copy-container">
+                            <pre class="bg-gray-700 text-white p-3 rounded-lg mb-4 overflow-x-auto"><code class="sql-code">USE mydatabase;</code></pre>
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+
+                        <p class="mb-2"><strong>Creating a Table with Constraints:</strong></p>
+                        <div class="copy-container">
+                            <pre class="bg-gray-700 text-white p-3 rounded-lg mb-4 overflow-x-auto"><code class="sql-code">CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login DATETIME
+);</code></pre>
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+
+                        <p class="mb-2"><strong>Inserting Data (Multiple Rows):</strong></p>
+                        <div class="copy-container">
+                            <pre class="bg-gray-700 text-white p-3 rounded-lg mb-4 overflow-x-auto"><code class="sql-code">INSERT INTO users (username, email, password_hash)
+VALUES
+    ('alice', 'alice@example.com', 'hashed_password_1'),
+    ('bob', 'bob@example.com', 'hashed_password_2');</code></pre>
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+
+                        <p class="mb-2"><strong>Selecting Data with Conditions and Ordering:</strong></p>
+                        <div class="copy-container">
+                            <pre class="bg-gray-700 text-white p-3 rounded-lg overflow-x-auto"><code class="sql-code">SELECT user_id, username, email
+FROM users
+WHERE created_at >= '2024-01-01' AND username LIKE 'a%'
+ORDER BY username ASC
+LIMIT 10 OFFSET 0;</code></pre>
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-indigo-300">Clauses</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Clauses are used to specify conditions, order, and group results in SQL queries.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><code class="text-yellow-300">WHERE</code>: Filters records based on a specified condition.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT * FROM products WHERE price > 50;</code></p>
+                                <p class="mt-1">Operators: <code class="text-yellow-300">=</code>, <code class="text-yellow-300">!=</code>, <code class="text-yellow-300">></code>, <code class="text-yellow-300"><</code>, <code class="text-yellow-300">>=</code>, <code class="text-yellow-300"><=</code>, <code class="text-yellow-300">AND</code>, <code class="text-yellow-300">OR</code>, <code class="text-yellow-300">NOT</code>, <code class="text-yellow-300">LIKE</code>, <code class="text-yellow-300">IN</code>, <code class="text-yellow-300">BETWEEN</code>, <code class="text-yellow-300">IS NULL</code>.</p>
+                            </li>
+                            <li><code class="text-yellow-300">ORDER BY</code>: Sorts the result-set in ascending (<code class="text-yellow-300">ASC</code>) or descending (<code class="text-yellow-300">DESC</code>) order.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT name, age FROM students ORDER BY age DESC;</code></p>
+                            </li>
+                            <li><code class="text-yellow-300">GROUP BY</code>: Groups rows that have the same values in specified columns into summary rows, often used with aggregate functions.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT department, COUNT(*) FROM employees GROUP BY department;</code></p>
+                            </li>
+                            <li><code class="text-yellow-300">HAVING</code>: Filters groups based on a specified condition, used after <code class="text-yellow-300">GROUP BY</code>.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT department, COUNT(*) FROM employees GROUP BY department HAVING COUNT(*) > 5;</code></p>
+                            </li>
+                            <li><code class="text-yellow-300">LIMIT</code>: Restricts the number of rows returned by a query.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT * FROM products LIMIT 10;</code></p>
+                            </li>
+                            <li><code class="text-yellow-300">OFFSET</code>: Used with <code class="text-yellow-300">LIMIT</code> to skip a specified number of rows before beginning to return rows.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT * FROM products LIMIT 10 OFFSET 20;</code> (skips first 20, returns next 10)</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-pink-300">Joins</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Joins are used to combine rows from two or more tables based on a related column between them.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><code class="text-yellow-300">INNER JOIN</code>: Returns rows when there is a match in both tables.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT o.order_id, c.customer_name FROM orders o INNER JOIN customers c ON o.customer_id = c.customer_id;</code></p>
+                            </li>
+                            <li><code class="text-yellow-300">LEFT JOIN</code> (or <code class="text-yellow-300">LEFT OUTER JOIN</code>): Returns all rows from the left table, and the matching rows from the right table. If no match, NULLs are returned for right table columns.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT c.customer_name, o.order_id FROM customers c LEFT JOIN orders o ON c.customer_id = o.customer_id;</code></p>
+                            </li>
+                            <li><code class="text-yellow-300">RIGHT JOIN</code> (or <code class="text-yellow-300">RIGHT OUTER JOIN</code>): Returns all rows from the right table, and the matching rows from the left table. If no match, NULLs are returned for left table columns.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT p.product_name, s.supplier_name FROM products p RIGHT JOIN suppliers s ON p.supplier_id = s.supplier_id;</code></p>
+                            </li>
+                            <li><code class="text-yellow-300">FULL OUTER JOIN</code> (emulated in MySQL): Returns all rows when there is a match in one of the tables. MySQL doesn't have a direct FULL OUTER JOIN. It's typically emulated using <code class="text-yellow-300">LEFT JOIN UNION ALL RIGHT JOIN</code>.</li>
+                            <li><code class="text-yellow-300">SELF JOIN</code>: A table is joined with itself. Useful for comparing rows within the same table.
+                                <p class="mt-1">Example: <code class="text-yellow-300">SELECT a.employee_name AS Employee, b.employee_name AS Manager FROM employees a JOIN employees b ON a.manager_id = b.employee_id;</code></p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-teal-300">Functions</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">MySQL provides many built-in functions to perform calculations, manipulate strings, handle dates, and more.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Aggregate Functions:</strong> Perform calculations on a set of rows and return a single summary value.
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><code class="text-yellow-300">COUNT()</code>: Returns the number of rows. (e.g., <code class="text-yellow-300">SELECT COUNT(*) FROM users;</code>)</li>
+                                    <li><code class="text-yellow-300">SUM()</code>: Calculates the sum of a numeric column. (e.g., <code class="text-yellow-300">SELECT SUM(amount) FROM orders;</code>)</li>
+                                    <li><code class="text-yellow-300">AVG()</code>: Calculates the average value of a numeric column. (e.g., <code class="text-yellow-300">SELECT AVG(price) FROM products;</code>)</li>
+                                    <li><code class="text-yellow-300">MIN()</code>: Returns the minimum value in a column. (e.g., <code class="text-yellow-300">SELECT MIN(salary) FROM employees;</code>)</li>
+                                    <li><code class="text-yellow-300">MAX()</code>: Returns the maximum value in a column. (e.g., <code class="text-yellow-300">SELECT MAX(order_date) FROM orders;</code>)</li>
+                                </ul>
+                            </li>
+                            <li><strong>String Functions:</strong> Manipulate string data.
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><code class="text-yellow-300">CONCAT(s1, s2, ...)</code>: Concatenates two or more strings. (e.g., <code class="text-yellow-300">SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM employees;</code>)</li>
+                                    <li><code class="text-yellow-300">LENGTH(s)</code>: Returns the length of a string in bytes. (e.g., <code class="text-yellow-300">SELECT LENGTH(username) FROM users;</code>)</li>
+                                    <li><code class="text-yellow-300">SUBSTRING(s, start, length)</code>: Extracts a substring. (e.g., <code class="text-yellow-300">SELECT SUBSTRING(email, 1, 5) FROM users;</code>)</li>
+                                    <li><code class="text-yellow-300">UPPER(s)</code> / <code class="text-yellow-300">LOWER(s)</code>: Converts string to uppercase/lowercase.</li>
+                                    <li><code class="text-yellow-300">TRIM(s)</code>: Removes leading/trailing spaces.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Date/Time Functions:</strong> Work with date and time values.
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><code class="text-yellow-300">NOW()</code>: Returns the current date and time.</li>
+                                    <li><code class="text-yellow-300">CURDATE()</code>: Returns the current date.</li>
+                                    <li><code class="text-yellow-300">DATE_FORMAT(date, format)</code>: Formats a date value. (e.g., <code class="text-yellow-300">SELECT DATE_FORMAT(created_at, '%Y-%m-%d') FROM users;</code>)</li>
+                                    <li><code class="text-yellow-300">DATEDIFF(date1, date2)</code>: Returns the number of days between two dates.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-orange-300">Indexes</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">Indexes are special lookup tables that the database search engine can use to speed up data retrieval. They are similar to an index in a book.</p>
+                        <p class="mb-3">While indexes improve read performance, they can slow down write operations (INSERT, UPDATE, DELETE) as the index also needs to be updated.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Types of Indexes:</strong>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><strong>PRIMARY KEY:</strong> Uniquely identifies each record in a table; automatically indexed.</li>
+                                    <li><strong>UNIQUE INDEX:</strong> Ensures all values in the column(s) are unique.</li>
+                                    <li><strong>NORMAL INDEX:</strong> Improves search speed on specific columns.</li>
+                                    <li><strong>FULLTEXT INDEX:</strong> For full-text searches on text columns.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Creating an Index:</strong></li>
+                        </ul>
+                        <div class="copy-container">
+                            <pre class="bg-gray-700 text-white p-3 rounded-lg mb-2 overflow-x-auto"><code class="sql-code">CREATE INDEX idx_employee_lastname ON employees (last_name);
+CREATE UNIQUE INDEX idx_user_email ON users (email);
+CREATE INDEX idx_product_category_price ON products (category_id, price); -- Composite index</code></pre>
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Dropping an Index:</strong></li>
+                        </ul>
+                        <div class="copy-container">
+                            <pre class="bg-gray-700 text-white p-3 rounded-lg overflow-x-auto"><code class="sql-code">DROP INDEX idx_employee_lastname ON employees;</code></pre>
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="language-card reveal bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-cyan-300">Transactions</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <p class="mb-3">A transaction is a single logical unit of work. It's a sequence of operations performed as a single logical unit of work. Transactions ensure data integrity by adhering to ACID properties.</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>ACID Properties:</strong>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li><strong>Atomicity:</strong> All operations within a transaction either complete successfully (commit) or none do (rollback). It's an "all or nothing" principle.</li>
+                                    <li><strong>Consistency:</strong> A transaction brings the database from one valid state to another, maintaining all defined rules and constraints.</li>
+                                    <li><strong>Isolation:</strong> Concurrent transactions execute independently without interfering with each other. The result of concurrent transactions is the same as if they were executed serially.</li>
+                                    <li><strong>Durability:</strong> Once a transaction is committed, its changes are permanent and survive system failures.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Transaction Commands:</strong></li>
+                        </ul>
+                        <div class="copy-container">
+                            <pre class="bg-gray-700 text-white p-3 rounded-lg overflow-x-auto"><code class="sql-code">START TRANSACTION; -- or BEGIN;
+-- SQL statements (e.g., INSERT, UPDATE, DELETE)
+INSERT INTO accounts (account_id, balance) VALUES (1, 1000);
+UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+
+COMMIT; -- Saves all changes made during the transaction permanently
+-- OR
+ROLLBACK; -- Undoes all changes made during the transaction</code></pre>
+                            <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                            <span class="copy-feedback">Copied!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="language-card wide-card reveal col-span-1 md:col-span-2 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out">
+                    <div class="card-header flex items-center mb-4">
+                        <h3 class="text-2xl font-semibold text-gray-300">Best Practices</h3>
+                    </div>
+                    <div class="card-body text-gray-300 leading-relaxed">
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Normalize your database design:</strong> Organize tables to reduce data redundancy and improve data integrity. Follow normalization forms (1NF, 2NF, 3NF, BCNF).</li>
+                            <li><strong>Use appropriate data types for columns:</strong> Select the smallest data type that can hold the required data to save space and improve performance.</li>
+                            <li><strong>Write clear, readable, and well-formatted SQL:</strong> Use consistent capitalization, indentation, and comments to make your queries understandable.</li>
+                            <li><strong>Optimize queries:</strong>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li>Use <code class="text-yellow-300">EXPLAIN</code> to analyze query execution plans and identify bottlenecks.</li>
+                                    <li>Avoid <code class="text-yellow-300">SELECT *</code> in production; explicitly list the columns you need.</li>
+                                    <li>Use <code class="text-yellow-300">WHERE</code> clauses effectively to filter data early.</li>
+                                    <li>Consider indexing frequently queried columns.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Secure your database:</strong>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li>Use strong, unique passwords for database users.</li>
+                                    <li>Grant minimal necessary privileges to users (principle of least privilege).</li>
+                                    <li>Regularly audit user accounts and permissions.</li>
+                                    <li>Keep your MySQL server software updated.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Regularly backup your data:</strong> Implement a robust backup strategy to prevent data loss.</li>
+                            <li><strong>Monitor database performance:</strong> Use tools to track query performance, resource utilization, and potential issues.</li>
+                            <li><strong>Sanitize and validate user input:</strong> Prevent SQL injection attacks by using prepared statements or parameterized queries.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 bg-opacity-90 py-8 text-gray-400 text-center shadow-inner">
+        <div class="footer-container container mx-auto px-4">
+            <div class="footer-links mb-4 space-x-6">
+                <a href="#" class="hover:text-blue-400 transition-colors duration-200">Privacy Policy</a>
+                <a href="#" class="hover:text-blue-400 transition-colors duration-200">Terms of Service</a>
+                <a href="#" class="hover:text-blue-400 transition-colors duration-200">Contact</a>
+            </div>
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> CodeHub. All rights reserved.</p>
+            <p class="text-sm mt-2">MySQL Notes Page - Styled to Match</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple scroll reveal functionality
+        const revealElements = document.querySelectorAll('.reveal');
+        function revealOnScroll() {
+            const windowHeight = window.innerHeight;
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                // Add 'active' class when element is 100px from the bottom of the viewport
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add('active');
+                } else {
+                    // Optionally remove 'active' class if element scrolls out of view upwards
+                    el.classList.remove('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check on page load
+
+        // Loading screen removal
+        window.addEventListener('load', () => {
+            const loadingScreen = document.querySelector('.loading-screen');
+            // The CSS animation 'fadeOut' handles the removal after 2s + 1s duration
+            // This ensures the animation plays out before potentially removing from DOM
+            setTimeout(() => {
+                if(loadingScreen) loadingScreen.remove();
+            }, 3000); // 2s delay + 1s animation duration
+        });
+
+        // Apply dark mode on load (since the toggle is removed)
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode'); // Just in case
+        });
+
+        // Function to copy code to clipboard
+        function copyCode(buttonElement) {
+            const copyContainer = buttonElement.closest('.copy-container');
+            const codeElement = copyContainer.querySelector('.sql-code');
+            const feedbackElement = copyContainer.querySelector('.copy-feedback');
+
+            // Create a temporary textarea element to hold the text to be copied
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeElement.textContent;
+            document.body.appendChild(tempTextArea);
+
+            // Select the text in the textarea
+            tempTextArea.select();
+            tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                // Copy the text to the clipboard
+                document.execCommand('copy');
+                // Show feedback message
+                feedbackElement.classList.add('show');
+                setTimeout(() => {
+                    feedbackElement.classList.remove('show');
+                }, 1500); // Hide "Copied!" message after 1.5 seconds
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                // Optionally, provide an error message to the user
+            } finally {
+                // Remove the temporary textarea
+                document.body.removeChild(tempTextArea);
+            }
+        }
+    </script>
+</body>
+</html>
